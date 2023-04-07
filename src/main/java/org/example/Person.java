@@ -3,17 +3,25 @@ package org.example;
 public class Person {
     protected final String name;
     protected final String lastname;
-    protected int age = -1;
+    protected int age;
     protected String address;
 
-    public Person(String name, String lastname) {
+    private Person(String name, String lastname) {
         this.name = name;
         this.lastname = lastname;
     }
 
+    public PersonBuilder newChildBuilder(){
+        PersonBuilder personBuilder = new PersonBuilder()
+                .setLastname(this.lastname)
+                .setAge(1)
+                .setAddress(this.address);
+        return personBuilder;
+    }
+
     public boolean hasAge(){
         boolean isKnown = false;
-        if (this.age != -1){
+        if (this.age != 0){
             isKnown = true;
         }
         return isKnown;
@@ -32,7 +40,8 @@ public class Person {
     }
 
     public void happyBirthday(){
-
+        age++;
+        System.out.println("Happy Birthday! You are " + age + " now!");
     }
 
     public String getName() {
@@ -61,7 +70,49 @@ public class Person {
                 '}';
     }
 
-//    public PersonBuilder newChildBuilder(){
-//
-//    }
+    public static class PersonBuilder {
+        protected String name;
+        protected String lastname;
+        protected int age;
+        protected String address;
+
+        public PersonBuilder setName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public PersonBuilder setLastname(String lastname) {
+            this.lastname = lastname;
+            return this;
+        }
+
+        public PersonBuilder setAge(int age) {
+            this.age = age;
+            return this;
+        }
+
+        public PersonBuilder setAddress(String address) {
+            this.address = address;
+            return this;
+        }
+
+        public Person build() throws IllegalStateException, IllegalArgumentException {
+            if (this.name == null) {
+                throw new IllegalStateException("В конструктор класса Person переданы не все обязательные параметры! " +
+                        "('name' и lastname')");
+            }
+            if (this.lastname == null){
+                throw new IllegalStateException("В конструктор класса Person переданы не все обязательные параметры! " +
+                        "('name' и lastname')");
+            }
+            if (age < 0){
+                throw new IllegalArgumentException("Некорректно указан возраст!");
+            }
+            Person person = new Person(this.name, this.lastname);
+            person.age = this.age;
+            person.address = this.address;
+
+            return person;
+        }
+    }
 }
