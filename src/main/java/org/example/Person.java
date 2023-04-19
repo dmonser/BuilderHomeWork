@@ -86,7 +86,10 @@ public class Person {
             return this;
         }
 
-        public PersonBuilder setAge(int age) {
+        public PersonBuilder setAge(int age) throws IllegalArgumentException{
+            if (age < 0){
+                throw new IllegalArgumentException("Некорректно указан возраст!");
+            }
             this.age = age;
             return this;
         }
@@ -96,17 +99,10 @@ public class Person {
             return this;
         }
 
-        public Person build() throws IllegalStateException, IllegalArgumentException {
-            if (this.name == null) {
+        public Person build() throws IllegalStateException {
+            if (this.name == null || this.lastname == null) {
                 throw new IllegalStateException("В конструктор класса Person переданы не все обязательные параметры! " +
                         "('name' и lastname')");
-            }
-            if (this.lastname == null){
-                throw new IllegalStateException("В конструктор класса Person переданы не все обязательные параметры! " +
-                        "('name' и lastname')");
-            }
-            if (age < 0){
-                throw new IllegalArgumentException("Некорректно указан возраст!");
             }
             Person person = new Person(this.name, this.lastname);
             person.age = this.age;
