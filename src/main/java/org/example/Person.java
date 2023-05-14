@@ -5,7 +5,7 @@ import java.util.OptionalInt;
 public class Person {
     protected final String name;
     protected final String lastname;
-    protected int age;
+    protected int age = -1;
     protected String address;
 
     private Person(String name, String lastname) {
@@ -23,7 +23,7 @@ public class Person {
 
     public boolean hasAge(){
         boolean isKnown = false;
-        if (this.age != 0){
+        if (this.age > -1){
             isKnown = true;
         }
         return isKnown;
@@ -55,7 +55,11 @@ public class Person {
     }
 
     public OptionalInt getAge() {
-        return OptionalInt.of(this.age);
+        if (this.age == -1) {
+            return OptionalInt.empty();
+        } else {
+            return OptionalInt.of(this.age);
+        }
     }
 
     public String getAddress() {
